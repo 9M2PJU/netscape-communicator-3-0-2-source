@@ -1,1 +1,1 @@
-char *XP_GetString(int i);
+../../../include/xpgetstr.h

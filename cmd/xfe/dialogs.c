@@ -353,17 +353,9 @@ fe_perror_2 (Widget parent, const char *message)
   char buf2 [512];
   char *b = buf1;
 
-#ifdef DEBUG_jwz  /* this is the modern way */
   if (e >= 0)
     es = strerror (e);
   if (!es || !*es)
-#else /* !DEBUG_jwz */
-  if (e >= 0 && e < sys_nerr)
-    {
-      es = sys_errlist [e];
-    }
-  else
-#endif /* !DEBUG_jwz */
     {
       PR_snprintf (buf2, sizeof (buf2), XP_GetString( XFE_UNKNOWN_ERROR_CODE ),
 		errno);

@@ -839,8 +839,8 @@ strerror (errnum)
   /*  extern char *sys_errlist[];*/
   extern int sys_nerr;
 
-  if (errnum >= 0 && errnum < sys_nerr)
-    return sys_errlist[errnum];
+  if (errnum >= 0 && errnum < 1000)
+    return strerror(errnum);
   return (char *) "Unknown error";
 }
 

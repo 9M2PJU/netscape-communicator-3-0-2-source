@@ -9641,8 +9641,8 @@ fe_VerifyDiskCache (MWContext *context)
           if (!error || !*error)
             error = XP_GetString( XFE_UNKNOWN_ERROR );
 #else /* !DEBUG_jwz */
-	  char *error = ((errno >= 0 && errno < sys_nerr)
-			 ? sys_errlist [errno]
+	  char *error = ((errno >= 0 && errno < 1000)
+			 ? strerror (errno)
 			 : XP_GetString( XFE_UNKNOWN_ERROR));
 #endif /* !DEBUG_jwz */
 	  PR_snprintf (message, sizeof (message),

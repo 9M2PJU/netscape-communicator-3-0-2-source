@@ -15,7 +15,6 @@ CSRCS =		   \
 	mktemp.c   \
 	ndbm.c	   \
 	snprintf.c \
-	strerror.c \
 	$(NULL)
 
 OBJS = $(CSRCS:.c=.o)

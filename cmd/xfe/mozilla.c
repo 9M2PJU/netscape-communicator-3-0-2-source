@@ -2604,8 +2604,8 @@ fe_ensure_config_dir_exists (Widget toplevel)
 	  PR_snprintf (buf, sizeof (buf), fmt, XP_AppName, dir, es);
 #else /* !DEBUG_jwz */
 	  PR_snprintf (buf, sizeof (buf), fmt, XP_AppName, dir,
-		   ((errno >= 0 && errno < sys_nerr)
-		    ? sys_errlist [errno] : XP_GetString( XFE_UNKNOWN_ERROR )));
+		   ((errno >= 0 && errno < 1000)
+		    ? strerror (errno) : XP_GetString( XFE_UNKNOWN_ERROR )));
 #endif /* !DEBUG_jwz */
 	  fe_Alert_2 (toplevel, buf);
 	  free (dir);
