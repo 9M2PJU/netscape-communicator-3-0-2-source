@@ -60,7 +60,7 @@ instead of releases.
 ### GitHub Releases
 
 The [Releases](https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases) page contains assets from tag builds. Push a tag whose name starts
-with `v`, such as `v3.02.2`. The workflow builds both architectures, creates a
+with `v`, such as `v3.02.3`. The workflow builds both architectures, creates a
 GitHub Release, and attaches six files:
 
 | Architecture | Debian package | RPM package | AppImage |
@@ -87,7 +87,7 @@ session can provide the X11 display on a Wayland desktop. The CI packages target
 Ubuntu 24.04 runtime package names; other distributions may need a rebuild or
 manual dependency adjustments.
 
-The one-line commands below install the current `v3.02.2` packaging release for
+The one-line commands below install the current `v3.02.3` packaging release for
 source version `3.02`. Replace
 `amd64` with `arm64` for Debian/AppImage files and replace `x86_64` with
 `aarch64` for RPM files on an ARM64 system.
@@ -98,13 +98,13 @@ The release does not include a native Arch package, so install the AppImage in
 your user account:
 
 ```sh
-mkdir -p "$HOME/.local/bin" && curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.2/netscape-communicator-3.02-linux-amd64.AppImage" -o "$HOME/.local/bin/netscape-communicator.AppImage" && chmod +x "$HOME/.local/bin/netscape-communicator.AppImage" && APPIMAGE_EXTRACT_AND_RUN=1 "$HOME/.local/bin/netscape-communicator.AppImage"
+mkdir -p "$HOME/.local/bin" && curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.3/netscape-communicator-3.02-linux-amd64.AppImage" -o "$HOME/.local/bin/netscape-communicator.AppImage" && chmod +x "$HOME/.local/bin/netscape-communicator.AppImage" && APPIMAGE_EXTRACT_AND_RUN=1 "$HOME/.local/bin/netscape-communicator.AppImage"
 ```
 
 ### Debian-based distributions
 
 ```sh
-curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.2/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.3/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
 ```
 
 ### Debian or Ubuntu
@@ -125,7 +125,7 @@ an adapted control file or a local rebuild.
 ### Ubuntu-based distributions
 
 ```sh
-curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.2/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.3/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
 ```
 
 ### RPM-based distributions
@@ -148,7 +148,7 @@ another RPM frontend does not pull them in.
 ### Red Hat-based distributions
 
 ```sh
-curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.2/netscape-communicator-3.02-1.x86_64.rpm" -o /tmp/netscape-communicator-3.02-1.x86_64.rpm && sudo dnf install -y /tmp/netscape-communicator-3.02-1.x86_64.rpm
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.3/netscape-communicator-3.02-1.x86_64.rpm" -o /tmp/netscape-communicator-3.02-1.x86_64.rpm && sudo dnf install -y /tmp/netscape-communicator-3.02-1.x86_64.rpm
 ```
 
 ### AppImage
@@ -289,8 +289,8 @@ cause that job to fail even when both package jobs pass.
 Create a release from the current source version with:
 
 ```sh
-git tag -a v3.02.2 -m "Netscape Communicator 3.02.2 Linux packaging"
-git push origin v3.02.2
+git tag -a v3.02.3 -m "Netscape Communicator 3.02.3 Linux packaging"
+git push origin v3.02.3
 ```
 
 The tag must point at a commit that contains the workflow. A manual GitHub
@@ -402,7 +402,7 @@ stops before packaging a mismatched build.
 ### The workflow creates artifacts but no Release
 
 A branch, pull request, or manual run creates Actions artifacts. A Release
-requires a pushed tag matching `v*`, such as `v3.02.2`. The tag workflow must
+requires a pushed tag matching `v*`, such as `v3.02.3`. The tag workflow must
 finish both architecture jobs before the release job can publish its files.
 
 If a tag run passes both build jobs but the release job fails, check the
