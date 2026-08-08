@@ -1,6 +1,6 @@
 # Netscape Communicator 3.02 for Linux
 
-[![Linux packages](https://github.com/9M2PJU/netscape-communicator-3-0-2-source/actions/workflows/linux-packages.yml/badge.svg)](https://github.com/9M2PJU/netscape-communicator-3-0-2-source/actions/workflows/linux-packages.yml)
+[![Linux packages](https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/actions/workflows/linux-packages.yml/badge.svg)](https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/actions/workflows/linux-packages.yml)
 
 This repository preserves the Netscape Communicator 3.02 source tree and the
 Linux build work needed to compile it with current GCC, glibc, Perl, X11, and
@@ -33,14 +33,14 @@ production mail.
 
 ## Quick Start
 
-1. Open the repository's [Releases](https://github.com/9M2PJU/netscape-communicator-3-0-2-source/releases) page.
+1. Open the repository's [Releases](https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases) page.
 2. Download the package that matches your CPU and Linux distribution.
 3. Follow the installation command for the package format in
    [Installation](#installation).
 
-The first release appears after a maintainer pushes a `v*` tag. Branch, pull
-request, and manual workflow runs produce Actions artifacts instead of
-releases.
+Each pushed `v*` tag produces a GitHub Release after both architecture builds
+pass. Branch, pull request, and manual workflow runs produce Actions artifacts
+instead of releases.
 
 ## Contents
 
@@ -59,8 +59,8 @@ releases.
 
 ### GitHub Releases
 
-The [Releases](https://github.com/9M2PJU/netscape-communicator-3-0-2-source/releases) page contains assets from tag builds. Push a tag whose name starts
-with `v`, such as `v3.02`. The workflow builds both architectures, creates a
+The [Releases](https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases) page contains assets from tag builds. Push a tag whose name starts
+with `v`, such as `v3.02.1`. The workflow builds both architectures, creates a
 GitHub Release, and attaches six files:
 
 | Architecture | Debian package | RPM package | AppImage |
@@ -87,6 +87,26 @@ session can provide the X11 display on a Wayland desktop. The CI packages target
 Ubuntu 24.04 runtime package names; other distributions may need a rebuild or
 manual dependency adjustments.
 
+The one-line commands below install the current `v3.02.1` packaging release for
+source version `3.02`. Replace
+`amd64` with `arm64` for Debian/AppImage files and replace `x86_64` with
+`aarch64` for RPM files on an ARM64 system.
+
+### Arch Linux and CachyOS
+
+The release does not include a native Arch package, so install the AppImage in
+your user account:
+
+```sh
+mkdir -p "$HOME/.local/bin" && curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.1/netscape-communicator-3.02-linux-amd64.AppImage" -o "$HOME/.local/bin/netscape-communicator.AppImage" && chmod +x "$HOME/.local/bin/netscape-communicator.AppImage" && APPIMAGE_EXTRACT_AND_RUN=1 "$HOME/.local/bin/netscape-communicator.AppImage"
+```
+
+### Debian-based distributions
+
+```sh
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.1/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
+```
+
 ### Debian or Ubuntu
 
 Download the package for your machine, then run:
@@ -101,6 +121,12 @@ Use the `arm64` filename on an ARM64 system.
 The generated `.deb` declares Ubuntu 24.04 dependencies, including
 `libxt6t64` and `libxm4`. Debian releases that use different package names need
 an adapted control file or a local rebuild.
+
+### Ubuntu-based distributions
+
+```sh
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.1/netscape-communicator-3.02-linux-amd64.deb" -o /tmp/netscape-communicator-3.02-linux-amd64.deb && sudo apt install -y /tmp/netscape-communicator-3.02-linux-amd64.deb
+```
 
 ### RPM-based distributions
 
@@ -118,6 +144,12 @@ low-level installation command, but it does not resolve dependencies.
 The current RPM spec does not declare runtime `Requires` entries. Install the
 Motif and X11 runtime packages provided by your distribution when `dnf` or
 another RPM frontend does not pull them in.
+
+### Red Hat-based distributions
+
+```sh
+curl -fL "https://github.com/9M2PJU/netscape-communicator-3-02-for-linux/releases/download/v3.02.1/netscape-communicator-3.02-1.x86_64.rpm" -o /tmp/netscape-communicator-3.02-1.x86_64.rpm && sudo dnf install -y /tmp/netscape-communicator-3.02-1.x86_64.rpm
+```
 
 ### AppImage
 
@@ -257,8 +289,8 @@ cause that job to fail even when both package jobs pass.
 Create a release from the current source version with:
 
 ```sh
-git tag -a v3.02 -m "Netscape Communicator 3.02"
-git push origin v3.02
+git tag -a v3.02.1 -m "Netscape Communicator 3.02.1 Linux packaging"
+git push origin v3.02.1
 ```
 
 The tag must point at a commit that contains the workflow. A manual GitHub
@@ -370,7 +402,7 @@ stops before packaging a mismatched build.
 ### The workflow creates artifacts but no Release
 
 A branch, pull request, or manual run creates Actions artifacts. A Release
-requires a pushed tag matching `v*`, such as `v3.02`. The tag workflow must
+requires a pushed tag matching `v*`, such as `v3.02.1`. The tag workflow must
 finish both architecture jobs before the release job can publish its files.
 
 If a tag run passes both build jobs but the release job fails, check the

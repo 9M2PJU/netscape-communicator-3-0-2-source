@@ -3,7 +3,7 @@ Version:        @VERSION@
 Release:        1%{?dist}
 Summary:        Classic Netscape Communicator X11 browser and mail client
 License:        Netscape License
-URL:            https://github.com/9M2PJU/netscape-communicator-3-0-2-source
+URL:            https://github.com/9M2PJU/netscape-communicator-3-02-for-linux
 BuildArch:      @RPM_ARCH@
 
 %description

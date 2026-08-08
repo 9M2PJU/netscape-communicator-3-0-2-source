@@ -139,6 +139,8 @@ copy_appimage_dependencies() {
     while IFS= read -r line; do
         soname=${line%% => *}
         path=${line##* => }
+        # ldd appends the mapped address after each resolved library path.
+        path=${path%% \(*}
         case "$path" in
             /*) ;;
             *) continue ;;
@@ -153,6 +155,12 @@ copy_appimage_dependencies() {
             cp -L "$path" "$appdir/usr/lib/$package_name/$base"
         fi
     done < <(ldd "$binary" 2>/dev/null || true)
+
+    if ! find "$appdir/usr/lib/$package_name" -maxdepth 1 -type f \
+        -name 'lib*.so*' -print -quit | grep -q .; then
+        echo "AppImage dependency bundling produced no shared libraries" >&2
+        exit 1
+    fi
 
     if command -v patchelf >/dev/null 2>&1; then
         patchelf --set-rpath '$ORIGIN' "$appdir/usr/lib/$package_name/netscape.bin"
