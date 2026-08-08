@@ -138,9 +138,11 @@ copy_appimage_dependencies() {
     mkdir -p "$appdir/usr/lib/$package_name"
     while IFS= read -r line; do
         soname=${line%% => *}
+        soname=${soname#"${soname%%[![:space:]]*}"}
         path=${line##* => }
         # ldd appends the mapped address after each resolved library path.
         path=${path%% \(*}
+        path=${path#"${path%%[![:space:]]*}"}
         case "$path" in
             /*) ;;
             *) continue ;;
