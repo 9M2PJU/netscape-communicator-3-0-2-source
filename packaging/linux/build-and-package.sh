@@ -186,6 +186,9 @@ install -m 0644 \
 copy_appimage_dependencies
 install -m 0755 "$(dirname -- "${BASH_SOURCE[0]}")/AppRun" "$appdir/AppRun"
 
+# CachyOS and other Arch systems can build/test the self-contained format
+# without installing Debian and RPM package toolchains.
+if [ "${APPIMAGE_ONLY:-0}" != 1 ]; then
 deb_dir="$work_dir/deb"
 mkdir -p "$deb_dir/DEBIAN"
 cp -a "$stage/." "$deb_dir/"
@@ -212,6 +215,7 @@ sed -e "s/@VERSION@/$version/g" -e "s/@RPM_ARCH@/$rpm_arch/g" \
 rpmbuild --define "_topdir $rpm_top" --define "_build_id_links none" \
     -bb "$rpm_top/SPECS/$package_name.spec"
 find "$rpm_top/RPMS" -type f -name '*.rpm' -exec cp -f {} "$output_dir/" \;
+fi
 
 appimage_tool=${APPIMAGETOOL:-$work_dir/appimagetool}
 if [ ! -x "$appimage_tool" ]; then

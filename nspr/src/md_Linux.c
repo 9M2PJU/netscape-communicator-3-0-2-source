@@ -6,7 +6,9 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <setjmp.h>
 #include <errno.h>
 #include <linux/net.h>
@@ -103,7 +105,7 @@ prword_t *_MD_HomeGCRegisters(PRThread *t, int isCurrent, int *np)
 int _OS_READ(int fd, void *buf, size_t len)
 {
     int rv;
-    rv = syscall(SYS_read, fd, buf, len);
+    rv = read(fd, buf, len);
     if (rv < 0) {
 	return -errno;
     }
@@ -113,7 +115,7 @@ int _OS_READ(int fd, void *buf, size_t len)
 int _OS_WRITE(int fd, const void *buf, size_t len)
 {
     int rv;
-    rv = syscall(SYS_write, fd, buf, len);
+    rv = write(fd, buf, len);
     if (rv < 0) {
 	return -errno;
     }
@@ -134,7 +136,7 @@ int _OS_OPEN(const char *path, int oflag, int mode)
 int _OS_CLOSE(int fd)
 {
     int rv;
-    rv = syscall(SYS_close, fd);
+    rv = close(fd);
     if(rv < 0)
         return -errno;
     return rv;
@@ -143,7 +145,7 @@ int _OS_CLOSE(int fd)
 int _OS_FCNTL(int fd, int flag, int value)
 {
     int rv;
-    rv = syscall(SYS_fcntl, fd, flag, value);
+    rv = fcntl(fd, flag, value);
     if (rv < 0) {
 	return -errno;
     }
@@ -153,7 +155,7 @@ int _OS_FCNTL(int fd, int flag, int value)
 int _OS_IOCTL(int fd, int tag, int arg)
 {
     int rv;
-    rv = syscall(SYS_ioctl, fd, tag, arg);
+    rv = ioctl(fd, tag, arg);
     if (rv < 0) {
 	return -errno;
     }
