@@ -54,6 +54,7 @@ jobs:
             perl \
             rpm \
             squashfs-tools \
+            strace \
             xvfb
 
       - name: Read source version
@@ -100,14 +101,17 @@ jobs:
           set +e
           timeout --signal=TERM 15s xvfb-run -a \
             env APPIMAGE_EXTRACT_AND_RUN=1 \
+            strace -f -o /tmp/netscape-appimage-smoke.strace \
             "$(find artifacts -maxdepth 1 -type f -name '*.AppImage' -print -quit)" \
             >/tmp/netscape-appimage-smoke.log 2>&1
           status=$?
           cat /tmp/netscape-appimage-smoke.log
+          tail -120 /tmp/netscape-appimage-smoke.strace || true
           test "$status" -eq 124
 
       - name: Upload Linux packages
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: netscape-communicator-${{ steps.version.outputs.version }}-${{ matrix.arch }}
           path: artifacts/*
