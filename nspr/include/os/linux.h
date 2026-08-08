@@ -25,7 +25,7 @@
 # define JB_PC 7
 #elif defined(__aarch64__)
 # define JB_BP 10
-# define JB_SP 12
+# define JB_SP 13
 # define JB_PC 11
 #endif
 
