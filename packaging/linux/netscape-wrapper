@@ -9,4 +9,6 @@ fi
 
 export XKEYSYMDB="${XKEYSYMDB:-$app_root/XKeysymDB}"
 export PATH="$app_root${PATH:+:$PATH}"
-exec "$app_root/netscape.bin" "$@"
+exec "$app_root/netscape.bin" \
+    -xrm "Netscape.appDir: $app_root/icons" \
+    "$@"

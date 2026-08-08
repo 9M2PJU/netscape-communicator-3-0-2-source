@@ -9,7 +9,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <setjmp.h>
+#include <ucontext.h>
 #include <errno.h>
 #include <linux/net.h>
 #include "mdint.h"
@@ -89,9 +89,9 @@ void _MD_InitOS(int when)
 prword_t *_MD_HomeGCRegisters(PRThread *t, int isCurrent, int *np)
 {
     if (isCurrent) {
-	(void) sigsetjmp(CONTEXT(t),1);
+        (void) getcontext(CONTEXT(t));
     }
-    *np = sizeof(CONTEXT(t)) / sizeof(prword_t);
+    *np = sizeof(t->context) / sizeof(prword_t);
     return (prword_t*) CONTEXT(t);
 }
 

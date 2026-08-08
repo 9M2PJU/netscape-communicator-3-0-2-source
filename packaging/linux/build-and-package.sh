@@ -105,6 +105,19 @@ if [ -f "$movemail" ]; then
 fi
 install -m 0644 "$source_root/cmd/xfe/XKeysymDB" \
     "$stage/usr/lib/$package_name/XKeysymDB"
+mkdir -p "$stage/usr/lib/$package_name/icons"
+for icon in "$source_root"/cmd/xfe/icons/*.gif; do
+    icon_name=${icon##*/}
+    icon_name=${icon_name%.gif}
+    if command -v convert >/dev/null 2>&1; then
+        convert "$icon" "$stage/usr/lib/$package_name/icons/$icon_name.xpm"
+    elif command -v magick >/dev/null 2>&1; then
+        magick "$icon" "$stage/usr/lib/$package_name/icons/$icon_name.xpm"
+    else
+        echo "ImageMagick is required to create external toolbar icons" >&2
+        exit 1
+    fi
+done
 install -m 0644 "$source_root/l10n/us/xp/LICENSE-export" \
     "$stage/usr/share/doc/$package_name/LICENSE"
 install -m 0644 "$source_root/cmd/xfe/$objdir/Netscape-export.ad" \
