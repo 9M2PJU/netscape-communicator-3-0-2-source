@@ -10,6 +10,7 @@
 #include <setjmp.h>
 #include <errno.h>
 #include <syscall.h>
+#include <unistd.h>
 #include <linux/net.h>
 #include "mdint.h"
 #include <signal.h>
@@ -45,7 +46,8 @@ int _OS_SEND(int fd, const void *buf, int len, int flags)
 int _OS_SELECT(int nfds, fd_set *readfds, fd_set *writefds,
                fd_set *exceptfds, struct timeval *timeout)
 {
-    int rv = select(nfds, readfds, writefds, exceptfds, timeout);
+    long rv = syscall(SYS_select, nfds, readfds, writefds, exceptfds,
+                      timeout);
     return rv < 0 ? -errno : rv;
 }
 

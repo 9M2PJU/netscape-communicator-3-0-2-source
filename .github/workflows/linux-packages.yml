@@ -53,7 +53,8 @@ jobs:
             patchelf \
             perl \
             rpm \
-            squashfs-tools
+            squashfs-tools \
+            xvfb
 
       - name: Read source version
         id: version
@@ -93,6 +94,17 @@ jobs:
           test "$(dpkg-deb -f artifacts/*.deb Architecture)" = "$PACKAGE_ARCH"
           test "$(rpm -qp --qf '%{ARCH}' artifacts/*.rpm)" = "$rpm_arch"
           file -b artifacts/*.AppImage | grep -F "$appimage_machine"
+
+      - name: Smoke test AppImage startup
+        run: |
+          set +e
+          timeout --signal=TERM 15s xvfb-run -a \
+            env APPIMAGE_EXTRACT_AND_RUN=1 \
+            "$(find artifacts -maxdepth 1 -type f -name '*.AppImage' -print -quit)" \
+            >/tmp/netscape-appimage-smoke.log 2>&1
+          status=$?
+          cat /tmp/netscape-appimage-smoke.log
+          test "$status" -eq 124
 
       - name: Upload Linux packages
         uses: actions/upload-artifact@v4
