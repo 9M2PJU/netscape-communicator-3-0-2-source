@@ -9,11 +9,10 @@
 #include <fcntl.h>
 #include <setjmp.h>
 #include <errno.h>
-#include <syscall.h>
-#include <unistd.h>
 #include <linux/net.h>
 #include "mdint.h"
 #include <signal.h>
+#include <time.h>
 
 /* The original Linux port supplied these through 32-bit socketcall
  * assembly.  Keep the same negative-errno convention with portable libc
@@ -46,8 +45,16 @@ int _OS_SEND(int fd, const void *buf, int len, int flags)
 int _OS_SELECT(int nfds, fd_set *readfds, fd_set *writefds,
                fd_set *exceptfds, struct timeval *timeout)
 {
-    long rv = syscall(SYS_select, nfds, readfds, writefds, exceptfds,
-                      timeout);
+    struct timespec ts;
+    struct timespec *tsp = 0;
+    int rv;
+
+    if (timeout) {
+        ts.tv_sec = timeout->tv_sec;
+        ts.tv_nsec = timeout->tv_usec * 1000;
+        tsp = &ts;
+    }
+    rv = pselect(nfds, readfds, writefds, exceptfds, tsp, 0);
     return rv < 0 ? -errno : rv;
 }
 
