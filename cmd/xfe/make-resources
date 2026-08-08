@@ -5,7 +5,12 @@ NAME=$1; shift
 CLASS=$1; shift
 VSUFFIX=$1; shift
 SS=$1; shift
-LOCALE_MAP=$1; shift
+if test $# -gt 0
+then
+	LOCALE_MAP=$1; shift
+else
+	LOCALE_MAP=""
+fi
 
 if test $# -eq 2
 then
@@ -51,4 +56,3 @@ cat resources ${LOCALE_MAP} strs | sed \
 	 s/@MAIL_IM_HACK@/${MAIL_IM_HACK}/g;
 	 s/@NEWS_IM_HACK@/${NEWS_IM_HACK}/g;
 	 s/@URLVERSION@/${VERS}/g" > ${DEST}
-

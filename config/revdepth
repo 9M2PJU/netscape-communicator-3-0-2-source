@@ -1,9 +1,9 @@
 #! /usr/local/bin/perl
 
-unshift(@INC, '/usr/lib/perl');
-unshift(@INC, '/usr/local/lib/perl');
+use FindBin;
+unshift(@INC, $FindBin::Bin);
 
-require "fastcwd.pl";
+require "$FindBin::Bin/fastcwd.pl";
 
 $cur = &fastcwd;
 chdir($ARGV[0]);

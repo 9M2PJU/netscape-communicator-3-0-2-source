@@ -603,7 +603,7 @@ EXTRA_POST_LINK_CMD = echo
 #        MOTIFLIB = -rdynamic /usr/X11R6/lib/libXm.a
 #        MOTIFLIB = /usr/X11R6/lib/libXm.a
 #	 MOTIFLIB = -L/usr/local/motif-2.1/lib -lXm -lXp 
-	 MOTIFLIB = -L/usr/local/motif-1.2.4/lib -lXm
+	 MOTIFLIB ?= -lXm
 #else
 #        USRLIBDIR = /usr/XF86-2.1.1/lib
 #         MOTIFLIB = /usr/local/lib/libXm.a
@@ -614,7 +614,7 @@ EXTRA_POST_LINK_CMD = echo
 #endif
 
        OTHER_LIBS = $(MOTIFLIB) $(XTOOLLIB) $(XMULIB) \
-                    $(EXTENSIONLIB) $(XLIB) /usr/lib/libm.a
+                    $(EXTENSIONLIB) $(XLIB) -lm
 
 ifdef BUILD_UNIX_PLUGINS
        OTHER_LIBS += -ldl

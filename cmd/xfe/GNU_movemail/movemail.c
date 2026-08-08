@@ -63,6 +63,9 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
+#ifdef __linux__
+#include <sys/wait.h>
+#endif
 #include <errno.h>
 #ifndef NETSCAPE
 #include <../src/syswait.h>

@@ -1,5 +1,6 @@
 #
-# Config stuff for Linux1.2.13
+# Linux configuration retained from the original build, with portable
+# defaults for current Linux toolchains.
 #
 
 CC			= gcc
@@ -14,10 +15,14 @@ OS_OBJTYPE		=
 NEED_XMOS		= 1
 
 # fixme OS_CFLAGS	= -m486 -ansi -Wall -pipe -MDupdate $(DEPENDENCIES)
-OS_CFLAGS		= -ansi -Wall -pipe
+OS_CFLAGS		= -ansi -Wall -pipe -fcommon
 
 OS_CFLAGS		+= -DLINUX -DLINUX1_2 -D_POSIX_SOURCE -D_BSD_SOURCE -DHAVE_STRERROR -DSW_THREADS
 OS_LIBS			= -L /lib -ldl -lc
+
+ifneq ($(filter x86_64 aarch64,$(shell uname -m)),)
+OS_CFLAGS		+= -DIS_64
+endif
 
 CPU_ARCH		= x86
 GFX_ARCH		= x
@@ -38,7 +43,7 @@ DSO_CFLAGS		= -fpic
 DSO_LDOPTS		= -shared
 DSO_LDFLAGS		=
 
-XINC			= /usr/X11R6/include
-INCLUDES		+= -I/b/local/osf-motif/motif-1.2.4/include/ -I$(XINC)
+XINC			?= /usr/include
+INCLUDES		+= -I$(XINC)
 
 BSDECHO			= echo

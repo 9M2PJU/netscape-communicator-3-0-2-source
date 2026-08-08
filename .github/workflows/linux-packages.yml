@@ -1,0 +1,103 @@
+name: Linux packages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.arch }} packages
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Linux build and packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential \
+            ca-certificates \
+            curl \
+            desktop-file-utils \
+            dpkg-dev \
+            file \
+            gawk \
+            imagemagick \
+            libice-dev \
+            libmotif-dev \
+            libsm-dev \
+            libx11-dev \
+            libxext-dev \
+            libxmu-dev \
+            libxpm-dev \
+            libxt-dev \
+            patchelf \
+            perl \
+            rpm \
+            squashfs-tools
+
+      - name: Read source version
+        id: version
+        run: |
+          version=$(sed -n 's/^#define VERSION_NUMBER[[:space:]]*//p' cmd/xfe/versionn.h | tr -d '[:space:]')
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Build .deb, .rpm, and AppImage
+        env:
+          SOURCE_ROOT: ${{ github.workspace }}
+          OUTPUT_DIR: ${{ github.workspace }}/artifacts
+          BUILD_JOBS: 1
+          VERSION: ${{ steps.version.outputs.version }}
+        run: bash packaging/linux/build-and-package.sh
+
+      - name: Verify package architectures
+        env:
+          PACKAGE_ARCH: ${{ matrix.arch }}
+        run: |
+          case "$PACKAGE_ARCH" in
+            amd64)
+              rpm_arch=x86_64
+              appimage_machine='x86-64'
+              ;;
+            arm64)
+              rpm_arch=aarch64
+              appimage_machine=aarch64
+              ;;
+            *)
+              echo "Unsupported matrix architecture: $PACKAGE_ARCH" >&2
+              exit 1
+              ;;
+          esac
+
+          test "$(find artifacts -maxdepth 1 -type f | wc -l)" -eq 3
+          test "$(dpkg-deb -f artifacts/*.deb Architecture)" = "$PACKAGE_ARCH"
+          test "$(rpm -qp --qf '%{ARCH}' artifacts/*.rpm)" = "$rpm_arch"
+          file -b artifacts/*.AppImage | grep -F "$appimage_machine"
+
+      - name: Upload Linux packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: netscape-communicator-${{ steps.version.outputs.version }}-${{ matrix.arch }}
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 14

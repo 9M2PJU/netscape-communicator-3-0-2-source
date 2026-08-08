@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Netscape Communicator
+Comment=The classic Netscape X11 browser and mail client
+Exec=netscape %U
+Icon=netscape-communicator
+Terminal=false
+Categories=Network;WebBrowser;Email;
+MimeType=text/html;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=Netscape

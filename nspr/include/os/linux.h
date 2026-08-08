@@ -12,6 +12,23 @@
 #ifdef SW_THREADS
 #include <setjmp.h>
 
+/* The old tree relied on private glibc JB_* macros which disappeared from
+ * modern Linux headers.  These are the target layouts used by the Linux
+ * setjmp ABI for the architectures packaged by CI. */
+#if defined(__i386__)
+# define JB_BP 3
+# define JB_SP 4
+# define JB_PC 5
+#elif defined(__x86_64__)
+# define JB_BP 1
+# define JB_SP 6
+# define JB_PC 7
+#elif defined(__aarch64__)
+# define JB_BP 10
+# define JB_SP 12
+# define JB_PC 11
+#endif
+
 #define PR_GetSP(_t) (_t)->context[0].__jmpbuf[JB_SP]
 
 #define PR_NUM_GCREGS	6

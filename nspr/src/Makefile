@@ -66,6 +66,13 @@ else
 ASFILES		= os_$(OS_ARCH).s
 endif
 
+# os_Linux.S contains 32-bit socketcall assembly.  Current Linux uses the
+# normal socket APIs on both amd64 and arm64; md_Linux.c supplies those
+# wrappers below, so do not assemble the obsolete file on Linux.
+ifeq ($(OS_ARCH),Linux)
+ASFILES		=
+endif
+
 # We have to supply our own versions of setjmp/longjmp
 # on BSDI 2.1
 ifeq ($(OS_ARCH),BSD_386)

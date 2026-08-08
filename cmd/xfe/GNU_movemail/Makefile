@@ -7,6 +7,10 @@ BINDIR		= $(OBJDIR)
 CFLAGS		= -O -DNETSCAPE $(PLAT_SPECIFIC)
 RM		= /bin/rm -rf
 
+ifeq ($(OS_ARCH),Linux)
+CFLAGS		+= -DHAVE_STRERROR
+endif
+
 # Platform-specific (e.g., DOS -- obj,exe,com).
 BINSUFFIX	=
 OBJSUFFIX	= o

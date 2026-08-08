@@ -54,6 +54,14 @@ endif
 # jwz: only use first two version numbers on linux
 ifeq ($(OS_ARCH),Linux)
 OS_RELEASE := $(shell echo "$(OS_RELEASE)" | sed 's/^\([0-9]*\.[0-9]*\)\..*/\1/')
+
+# The original tree only shipped a Linux2.6.mk file.  Modern kernels have
+# different version numbers, but the Linux build configuration is still the
+# closest match.  Fall back to the last known Linux configuration instead of
+# trying to include a file which cannot exist on a current runner.
+ifeq ($(wildcard $(DEPTH)/config/$(OS_ARCH)$(OS_RELEASE).mk),)
+OS_RELEASE := 2.6
+endif
 endif
 
 

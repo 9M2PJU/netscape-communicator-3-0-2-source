@@ -1,6 +1,9 @@
 #! /usr/local/bin/perl
 
-require "fastcwd.pl";
+use FindBin;
+unshift(@INC, $FindBin::Bin);
+
+require "$FindBin::Bin/fastcwd.pl";
 
 $_ = &fastcwd;
 if (m@^/[uh]/@o || s@^/tmp_mnt/@/@o) {

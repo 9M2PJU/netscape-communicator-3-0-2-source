@@ -163,36 +163,9 @@ endif
 
 -include $(DEPENDENCIES)
 
-# Can't use sed because of its 4000-char line length limit, so resort to perl
+# Can't use sed because of its 4000-char line length limit, so resort to perl.
 .DEFAULT:
-	@perl -e '                                                            \
-	    open(MD, "< $(DEPENDENCIES)");                                    \
-	    while (<MD>) {                                                    \
-		if (m@ \.*/*$< @) {                                           \
-		    $$found = 1;                                              \
-		    last;                                                     \
-		}                                                             \
-	    }                                                                 \
-	    if ($$found) {                                                    \
-		print "Removing stale dependency $< from $(DEPENDENCIES)\n";  \
-		seek(MD, 0, 0);                                               \
-		$$tmpname = "$(OBJDIR)/fix.md" . $$$$;                        \
-		open(TMD, "> " . $$tmpname);                                  \
-		while (<MD>) {                                                \
-		    s@ \.*/*$< @ @;                                           \
-		    if (!print TMD "$$_") {                                   \
-			unlink(($$tmpname));                                  \
-			exit(1);                                              \
-		    }                                                         \
-		}                                                             \
-		close(TMD);                                                   \
-		if (!rename($$tmpname, "$(DEPENDENCIES)")) {                  \
-		    unlink(($$tmpname));                                      \
-		}                                                             \
-	    } elsif ("$<" ne "$(DEPENDENCIES)") {                             \
-		print "$(MAKE): *** No rule to make target $<.  Stop.\n";     \
-		exit(1);                                                      \
-	    }'
+	@perl $(DEPTH)/config/fixdeps.pl "$(DEPENDENCIES)" "$<" "$(OBJDIR)" "$(MAKE)"
 
 -include $(MY_RULES)
 
@@ -255,4 +228,3 @@ endif
 .PHONY: all all_platforms alltags clean clobber clobber_all boot export \
 	install jri_headers jri_stubs mac_jri_headers mac_jri_stubs \
 	$(OBJDIR) $(DIRS)
-

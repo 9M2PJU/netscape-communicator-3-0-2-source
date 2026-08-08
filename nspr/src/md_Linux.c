@@ -4,12 +4,50 @@
 #include "prthread.h"
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <fcntl.h>
 #include <setjmp.h>
 #include <errno.h>
 #include <syscall.h>
 #include <linux/net.h>
 #include "mdint.h"
 #include <signal.h>
+
+/* The original Linux port supplied these through 32-bit socketcall
+ * assembly.  Keep the same negative-errno convention with portable libc
+ * calls so the port also links on amd64 and arm64. */
+int _OS_SOCKET(int domain, int type, int protocol)
+{
+    int rv = socket(domain, type, protocol);
+    return rv < 0 ? -errno : rv;
+}
+
+int _OS_CONNECT(int fd, void *addr, int addrlen)
+{
+    int rv = connect(fd, (const struct sockaddr *) addr,
+                     (socklen_t) addrlen);
+    return rv < 0 ? -errno : rv;
+}
+
+int _OS_RECV(int fd, void *buf, int len, int flags)
+{
+    int rv = recv(fd, buf, (size_t) len, flags);
+    return rv < 0 ? -errno : rv;
+}
+
+int _OS_SEND(int fd, const void *buf, int len, int flags)
+{
+    int rv = send(fd, buf, (size_t) len, flags);
+    return rv < 0 ? -errno : rv;
+}
+
+int _OS_SELECT(int nfds, fd_set *readfds, fd_set *writefds,
+               fd_set *exceptfds, struct timeval *timeout)
+{
+    int rv = select(nfds, readfds, writefds, exceptfds, timeout);
+    return rv < 0 ? -errno : rv;
+}
 
 static void CatchSegv(void)
 {
@@ -76,7 +114,9 @@ int _OS_WRITE(int fd, const void *buf, size_t len)
 int _OS_OPEN(const char *path, int oflag, int mode)
 {
     int rv;
-    rv = syscall(SYS_open, path, oflag, mode);
+    /* AArch64 has openat(2) but no SYS_open macro.  libc selects the
+     * correct syscall on every Linux architecture. */
+    rv = open(path, oflag, mode);
     if(rv < 0)
         return -errno;
     return rv;

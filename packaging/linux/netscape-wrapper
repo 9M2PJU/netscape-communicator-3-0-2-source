@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${APPDIR:-}" ] && [ -d "$APPDIR/usr/lib/netscape-communicator" ]; then
+    app_root="$APPDIR/usr/lib/netscape-communicator"
+else
+    app_root=/usr/lib/netscape-communicator
+fi
+
+export XKEYSYMDB="${XKEYSYMDB:-$app_root/XKeysymDB}"
+export PATH="$app_root${PATH:+:$PATH}"
+exec "$app_root/netscape.bin" "$@"

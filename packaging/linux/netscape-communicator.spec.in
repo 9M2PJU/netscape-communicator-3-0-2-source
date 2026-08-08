@@ -1,0 +1,33 @@
+Name:           netscape-communicator
+Version:        @VERSION@
+Release:        1%{?dist}
+Summary:        Classic Netscape Communicator X11 browser and mail client
+License:        Netscape License
+URL:            https://github.com/9M2PJU/netscape-communicator-3-0-2-source
+BuildArch:      @RPM_ARCH@
+
+%description
+Netscape Communicator 3.02, packaged from the historical X11/Motif source
+tree for modern Linux systems.
+
+%prep
+
+%build
+
+%install
+rm -rf %{buildroot}
+mkdir -p %{buildroot}
+cp -a %{_sourcedir}/root/. %{buildroot}/
+
+%files
+%defattr(-,root,root,-)
+/usr/bin/netscape
+/usr/bin/netscape-communicator
+/usr/lib/netscape-communicator
+/usr/share/applications/netscape-communicator.desktop
+/usr/share/icons/hicolor/48x48/apps/netscape-communicator.png
+%doc /usr/share/doc/netscape-communicator/LICENSE
+
+%changelog
+* Thu Jan 01 2026 Netscape Communicator maintainers <noreply@example.invalid> - @VERSION@-1
+- Initial Linux package.
